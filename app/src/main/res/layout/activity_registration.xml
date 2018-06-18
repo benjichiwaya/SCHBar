@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient2"
+    tools:context="com.example.chiwaya.schbar.Registration">
+
+    <EditText
+        android:id="@+id/register_user"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/register_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:drawableLeft="@mipmap/ic_launcher_login"
+        android:ems="10"
+        android:hint="User Name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/register_login"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_alignLeft="@+id/register_user"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/register_user"
+        android:layout_marginTop="38dp"
+        android:drawableLeft="@mipmap/ic_launcher_login"
+        android:ems="10"
+        android:hint="Login (email)"
+        android:inputType="textPersonName" />
+
+
+    <EditText
+        android:id="@+id/register_passcode"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_alignLeft="@+id/register_user"
+        android:layout_alignStart="@+id/register_user"
+        android:layout_below="@+id/register_user"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:hint="Password"
+        android:drawableLeft="@mipmap/ic_launcher_passcode"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/register_passcode_confirm"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_alignLeft="@+id/register_passcode"
+        android:layout_alignStart="@+id/register_passcode"
+        android:layout_below="@+id/register_passcode"
+        android:layout_marginTop="25dp"
+        android:drawableLeft="@mipmap/ic_launcher_passcode"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/register_register"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/register_passcode_confirm"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/register_passcode_confirm"
+        android:layout_marginBottom="34dp"
+        android:layout_marginLeft="76dp"
+        android:layout_marginStart="76dp"
+        android:onClick="Final_Register"
+        android:text="Register" />
+
+
+</RelativeLayout>
