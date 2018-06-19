@@ -27,13 +27,14 @@ public class Registration extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        email = (EditText) findViewById(R.id.register_login);
-        username = (EditText) findViewById(R.id.register_user);
-        password = (EditText) findViewById(R.id.register_passcode);
-        passwordConfirm = (EditText) findViewById(R.id.register_passcode_confirm);
+        email = findViewById(R.id.register_login);
+        username = findViewById(R.id.register_user);
+        password = findViewById(R.id.register_passcode);
+        passwordConfirm = findViewById(R.id.register_passcode_confirm);
     }
 
     public void Final_Register(View view) {
+
         String login = email.getText().toString();
         String pass  = password.getText().toString();
         String userID = username.getText().toString();
@@ -41,28 +42,28 @@ public class Registration extends AppCompatActivity {
 
         if(TextUtils.isEmpty(login))
         {
-            toast.makeText(this, " Please enter valid email login", Toast.LENGTH_SHORT).show();
+            toast.makeText(this, R.string.email_empty, Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(pass))
         {
-            toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+            toast.makeText(this, R.string.password_empty, Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(passConf))
         {
-            toast.makeText(this, "Please enter password confirmation", Toast.LENGTH_SHORT).show();
+            toast.makeText(this, R.string.confirmation_not_match, Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(userID))
         {
-            toast.makeText(this, "Please enter a Username", Toast.LENGTH_SHORT).show();
+            toast.makeText(this, R.string.user_not_match, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(!TextUtils.equals(pass,passConf))
         {
-            toast.makeText(this, "Password does not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.pasword_not_match, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -73,6 +74,8 @@ public class Registration extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                            toast.makeText(Registration.this, R.string.user_created,toast.LENGTH_SHORT).show();
                             startActivity(new Intent(Registration.this, Choice.class));
                             return;
 

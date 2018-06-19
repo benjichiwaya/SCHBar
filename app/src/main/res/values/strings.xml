@@ -19,8 +19,8 @@
 
 
     <!--*********************************P.O.S.T************************************-->
-    <string name="feed_post_title">BenjiChiwaya</string>
-    <string name="feed_post_content">This is the very first post. Awesome!</string>
+    <string name="feed_post_title">Short title to the post</string>
+    <string name="feed_post_content">This is the very first post. Awesome! </string>
 
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -111,4 +111,11 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="pasword_not_match">Password does not match</string>
+    <string name="user_not_match">Please enter a Username</string>
+    <string name="confirmation_not_match">Please enter password confirmation</string>
+    <string name="password_empty">Please enter password</string>
+    <string name="email_empty">Please enter valid email login</string>
+    <string name="user_created">New user created</string>
+    <string name="benjie">Anonymous User</string>
 </resources>
