@@ -105,7 +105,7 @@ public class Post extends AppCompatActivity {
         filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri completedUri = taskSnapshot.getDownloadUrl();
+                Uri completedUri = taskSnapshot.getUploadSessionUri();
                 Toast.makeText(Post.this, R.string.upload, Toast.LENGTH_SHORT);
 
                 DatabaseReference newPosting = localData.push();
