@@ -11,12 +11,13 @@ public class PostItem {
     public PostItem(){
     }
 
-    public PostItem(String title, String desc, String image, String user)
+    public PostItem(String image,String title, String desc )
     {
+        this.image = image;
         this.title = title;
         this.desc = desc;
-        this.image = image;
-        this.user = user;
+
+
 
     }
 
@@ -32,8 +33,6 @@ public class PostItem {
         return image;
     }
 
-    public  String getUser(){ return user;}
-
 
     public void setDesc(String desc) {
         this.desc = desc;
@@ -47,5 +46,4 @@ public class PostItem {
         this.title = title;
     }
 
-    public void setUser(String user){ this.user = user;}
 }

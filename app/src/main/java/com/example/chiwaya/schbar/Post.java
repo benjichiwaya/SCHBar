@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +18,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,12 +36,15 @@ public class Post extends AppCompatActivity {
 
     private int GALLERY_REQUEST = 2;
     private Uri uri = null;
+    private Uri newUri = null;
     private ImageView imgbutton;
     private EditText captionPost;
     private EditText captioNotes;
     private StorageReference storageReference;
-    private FirebaseDatabase onlineData;
-    private DatabaseReference localData;
+    private FirebaseDatabase onlineDatabase;
+    private DatabaseReference localDatabase;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 
 
     @Override
@@ -46,13 +54,11 @@ public class Post extends AppCompatActivity {
         captionPost = findViewById(R.id.captionTitle);
         captioNotes = findViewById(R.id.captionText);
         storageReference = FirebaseStorage.getInstance().getReference();
-        onlineData.goOnline();
 
-        //Remember to chack .getInstance omission. #does it affect the apps run.
-        localData = onlineData.getReference().child("Post_Notes");
+        onlineDatabase = FirebaseDatabase.getInstance();
+        localDatabase = onlineDatabase.getReference("");
 
-
-
+        storageReference = FirebaseStorage.getInstance().getReference("UDC_URIs");
     }
 
     public void addNewPhoto(View view) {
@@ -74,8 +80,7 @@ public class Post extends AppCompatActivity {
      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
          super.onActivityResult(requestCode, resultCode, data);
 
-         if(requestCode == GALLERY_REQUEST && requestCode == Activity.RESULT_OK)
-         {
+         if (requestCode == GALLERY_REQUEST && requestCode == Activity.RESULT_OK) {
              uri = data.getData();
              imgbutton = findViewById(R.id.postImage);
              imgbutton.setImageURI(uri);
@@ -87,31 +92,49 @@ public class Post extends AppCompatActivity {
                  e.printStackTrace();
                  return;
              }
-
              Bitmap bmp = BitmapFactory.decodeFileDescriptor(fd.getFileDescriptor());
-             imgbutton.setImageBitmap(bmp);
+         } else {
+
+             uri = data.getData();
+             imgbutton = findViewById(R.id.postImage);
+             imgbutton.setImageURI(uri);
          }
      }
+     /*
+     * This is the segment of code where I programmed how the image and accompanying data is stored online and on the local database.
+     * */
 
     public void createNew_Posting(View view) {
-
-        StorageReference filePath = storageReference.child("Image com.example.chiwaya.schbar.PostItem").child(uri.getLastPathSegment());
 
         //creat a safe check for cases where there is no image attached
         final String caption = captionPost.getText().toString().trim();
         final String notes = captioNotes.getText().toString();
 
-        filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+        storageReference.child("UDC_URIs").child(user.getUid()).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                 Uri completedUri = taskSnapshot.getUploadSessionUri();
+                newUri = completedUri;
                 Toast.makeText(Post.this, R.string.upload, Toast.LENGTH_SHORT);
 
-                DatabaseReference newPosting = localData.push();
-                newPosting.child("caption").setValue(caption);
-                newPosting.child("notes").setValue(notes);
-                newPosting.child("attachment").setValue(completedUri.toString());
+            }
+        });
 
+        wrtie_New_Data(user.getUid(),newUri.toString(),caption,notes);
+        startActivity(new Intent(Post.this,Choice.class ));
+
+    }
+
+    private void wrtie_New_Data(String user, String uri, String title, String description ){
+
+        PostItem postItem = new PostItem(uri,title,description);
+
+        localDatabase.child("Post").child(user).setValue(postItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+               startActivity( new Intent(Post.this, mainActivity.class));
             }
         });
     }

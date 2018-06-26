@@ -35,9 +35,12 @@ public class Login extends AppCompatActivity {
 
         email = findViewById(R.id.user_login);
         password = findViewById(R.id.user_passcode);
-        email.addTextChangedListener(new TextWatcher() {
+        password.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(!email.equals(Patterns.EMAIL_ADDRESS)){
+                    email.setError("Please Enter Valid Email");
+                }
 
             }
 
@@ -48,9 +51,6 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!email.equals(Patterns.EMAIL_ADDRESS)){
-                    email.setError("Please Enter Valid Email");
-                }
             }
         });
     }

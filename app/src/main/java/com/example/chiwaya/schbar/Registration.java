@@ -40,7 +40,7 @@ public class Registration extends AppCompatActivity {
         password = findViewById(R.id.register_passcode);
         passwordConfirm = findViewById(R.id.register_passcode_confirm);
 
-        email.addTextChangedListener(new TextWatcher() {
+        password.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -53,35 +53,20 @@ public class Registration extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!email.equals(Patterns.EMAIL_ADDRESS))
-                {
-                    email.setError("PLease Enter Valid Email");
+                    if (!email.equals(Patterns.EMAIL_ADDRESS))
+                    {
+                        email.setError("PLease Enter Valid Email");
+                    }
                 }
-            }
-        });
-        passwordConfirm.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(password.getText() != passwordConfirm.getText())
-                {
-                    passwordConfirm.setError("Passwords do not match");
-                }
-                s.clear();
-            }
         });
     }
 
     public void Final_Register(View view) {
+
+        if(password.getText() != passwordConfirm.getText())
+        {
+            passwordConfirm.setError("Passwords do not match");
+        }
 
         String login = email.getText().toString();
         String pass  = password.getText().toString();
