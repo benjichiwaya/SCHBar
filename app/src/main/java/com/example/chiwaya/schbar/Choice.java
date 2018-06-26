@@ -17,11 +17,12 @@ public class Choice extends AppCompatActivity {
     public void nerdClicked(View view) {
 
         Toast.makeText(this, "This feed is empty for now, Please check again later", Toast.LENGTH_LONG).show();
+        startActivity( new Intent(Choice.this, Post.class));
 
     }
 
     public void groupeeCicked(View view) {
         Toast.makeText(this, "This feed is empty for now, Please check again later", Toast.LENGTH_LONG).show();
-        //startActivity( new Intent(Choice.this, PartyFeed.class));
+        startActivity( new Intent(Choice.this, Post.class));
     }
 }

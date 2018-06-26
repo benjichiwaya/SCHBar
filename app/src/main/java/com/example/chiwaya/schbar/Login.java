@@ -9,8 +9,11 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,7 +24,6 @@ public class Login extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private EditText email, password;
-    public  Toast toast;
 
 
     @Override
@@ -31,8 +33,26 @@ public class Login extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        email = (EditText) findViewById(R.id.user_login);
-        password = (EditText) findViewById(R.id.user_passcode);
+        email = findViewById(R.id.user_login);
+        password = findViewById(R.id.user_passcode);
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!email.equals(Patterns.EMAIL_ADDRESS)){
+                    email.setError("Please Enter Valid Email");
+                }
+            }
+        });
     }
 
     public void register_Account(View view) {
@@ -45,22 +65,26 @@ public class Login extends AppCompatActivity {
         String login = email.getText().toString();
         String pass  = password.getText().toString();
 
-        if(TextUtils.isEmpty(login))
-        {
-            toast.makeText(this, R.string.wrong_email, Toast.LENGTH_SHORT).show();
-            return;
+        if (login.isEmpty()||pass.isEmpty()){
+            Toast.makeText(Login.this, R.string.one_entry_missing,
+                    Toast.LENGTH_SHORT).show();
         }
-
-        if(TextUtils.isEmpty(pass))
-        {
-            toast.makeText(this, R.string.wrong_password, Toast.LENGTH_SHORT).show();
-            return;
+        else{
+            firebaseAuth.signInWithEmailAndPassword(login, pass)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                FirebaseUser user = firebaseAuth.getCurrentUser();
+                                startActivity(new Intent(Login.this, Choice.class));
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(Login.this, R.string.auth_failed,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
-
-        firebaseAuth.signInWithEmailAndPassword(login,pass);
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        startActivity(new Intent( Login.this, Choice.class));
-        toast.makeText(this, R.string.failed_login, Toast.LENGTH_SHORT).show();
-        return;
     }
 }

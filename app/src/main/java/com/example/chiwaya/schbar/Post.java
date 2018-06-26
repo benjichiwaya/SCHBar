@@ -89,7 +89,6 @@ public class Post extends AppCompatActivity {
              }
 
              Bitmap bmp = BitmapFactory.decodeFileDescriptor(fd.getFileDescriptor());
-
              imgbutton.setImageBitmap(bmp);
          }
      }

@@ -1,0 +1,5 @@
+<root>
+    <item name='android.util.Patterns'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

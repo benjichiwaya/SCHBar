@@ -113,9 +113,9 @@
     </string>
     <string name="pasword_not_match">Password does not match</string>
     <string name="user_not_match">Please enter a Username</string>
-    <string name="confirmation_not_match">Please enter password confirmation</string>
-    <string name="password_empty">Please enter password</string>
-    <string name="email_empty">Please enter valid email login</string>
+    <string name="one_entry_missing">Please fill in required fields</string>
+    <string name="email_empty">Please enter valid email</string>
     <string name="user_created">New user created</string>
     <string name="benjie">Anonymous User</string>
+    <string name="auth_failed">Authentication failed.</string>
 </resources>
