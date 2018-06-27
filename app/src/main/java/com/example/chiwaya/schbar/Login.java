@@ -39,20 +39,27 @@ public class Login extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 if(!email.equals(Patterns.EMAIL_ADDRESS)){
-                    email.setError("Please Enter Valid Email");
+                    testEmail(true);
                 }
-
+                else
+                {
+                    testEmail(false);
+                }
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
+    }
+
+    public void testEmail(boolean test)
+    {
+        if(test){
+            email.setError("Please Enter Valid Email");
+        }
     }
 
     public void register_Account(View view) {
@@ -61,7 +68,6 @@ public class Login extends AppCompatActivity {
     }
 
     public void Login_Account(View view) {
-
         String login = email.getText().toString();
         String pass  = password.getText().toString();
 

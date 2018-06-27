@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,7 +41,7 @@ public class Post extends AppCompatActivity {
     private ImageView imgbutton;
     private EditText captionPost;
     private EditText captioNotes;
-    private StorageReference storageReference;
+    private StorageReference storageReference, test;
     private FirebaseDatabase onlineDatabase;
     private DatabaseReference localDatabase;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -53,12 +54,11 @@ public class Post extends AppCompatActivity {
         setContentView(R.layout.activity_post);
         captionPost = findViewById(R.id.captionTitle);
         captioNotes = findViewById(R.id.captionText);
-        storageReference = FirebaseStorage.getInstance().getReference();
 
-        onlineDatabase = FirebaseDatabase.getInstance();
-        localDatabase = onlineDatabase.getReference("");
+        storageReference = FirebaseStorage.getInstance().getReference("SCHBar");
+        localDatabase = FirebaseDatabase.getInstance().getReference("Posts");
 
-        storageReference = FirebaseStorage.getInstance().getReference("UDC_URIs");
+        storageReference = FirebaseStorage.getInstance().getReference("IMAGES/UDC/");
     }
 
     public void addNewPhoto(View view) {
@@ -103,28 +103,32 @@ public class Post extends AppCompatActivity {
      /*
      * This is the segment of code where I programmed how the image and accompanying data is stored online and on the local database.
      * */
-
     public void createNew_Posting(View view) {
 
         //creat a safe check for cases where there is no image attached
         final String caption = captionPost.getText().toString().trim();
         final String notes = captioNotes.getText().toString();
 
-
-        storageReference.child("UDC_URIs").child(user.getUid()).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        storageReference.child("UDC_URIs").putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                 Uri completedUri = taskSnapshot.getUploadSessionUri();
+
                 newUri = completedUri;
                 Toast.makeText(Post.this, R.string.upload, Toast.LENGTH_SHORT);
+                wrtie_New_Data(user.getUid(),newUri.toString(),caption,notes);
+                startActivity(new Intent(Post.this,Choice.class ));
 
             }
         });
 
-        wrtie_New_Data(user.getUid(),newUri.toString(),caption,notes);
-        startActivity(new Intent(Post.this,Choice.class ));
-
+        storageReference.child("UDC_URIs").child(user.getUid()).putFile(uri).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Post.this, R.string.upload, Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     private void wrtie_New_Data(String user, String uri, String title, String description ){

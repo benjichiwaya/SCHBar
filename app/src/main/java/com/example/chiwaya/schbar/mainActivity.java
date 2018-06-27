@@ -1,6 +1,7 @@
 package com.example.chiwaya.schbar;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -11,12 +12,15 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter_LifecycleAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.*;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,16 +39,11 @@ public class mainActivity extends AppCompatActivity {
     private RecyclerView mainList;
     private DatabaseReference localDatabase;
     private FirebaseDatabase fireDatabase;
+    private FirebaseUser user;
+    private StorageReference storageReference;
 
     private static final String TAG = "mainActivity";
-
-    //Variables used
-    private ArrayList<String> newUser   = new ArrayList<>();
-    private ArrayList<String> newTitle  = new ArrayList<>();
-    private ArrayList<String> newDscrpt = new ArrayList<>();
-    private ArrayList<String> newImage  = new ArrayList<>();
     private Context postContext;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +53,15 @@ public class mainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Started with no errors");
 
          mainList = findViewById(R.id.mainRecyclerList);
-         mainList.setHasFixedSize(true );
+         mainList.setHasFixedSize(false);
          mainList.setLayoutManager( new LinearLayoutManager(this));
+
+         storageReference = FirebaseStorage.getInstance().getReference("IMAGES/UDC/");
+         localDatabase = FirebaseDatabase.getInstance().getReference("Posts");
     }
 
     Query query = FirebaseDatabase.getInstance()
-        .getReference().child("post").limitToLast(10);
-
+        .getReference().child("Post").limitToLast(10);
     ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
@@ -71,17 +72,14 @@ public class mainActivity extends AppCompatActivity {
         public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
             // ...
         }
-
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
             // ...
         }
-
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
             // ...
         }
-
         @Override
         public void onCancelled(DatabaseError databaseError) {
             // ...
@@ -91,26 +89,27 @@ public class mainActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-
         FirebaseRecyclerOptions<PostItem> options = new FirebaseRecyclerOptions
                 .Builder<PostItem>()
                 .setQuery(query,PostItem.class)
                 .build();
+
+
 
         FirebaseRecyclerAdapter <PostItem, MainViewHolder> fireRecycler =
                 new FirebaseRecyclerAdapter<PostItem, MainViewHolder>(options){
                     @Override
                     protected void onBindViewHolder(@NonNull MainViewHolder holder, int position, @NonNull PostItem model) {
                         Log.d(TAG, "onBindViewHolder: called");
-                        //loading all images
-                        Glide.with(postContext)
-                                .asBitmap()
-                                .load(newImage.get(position)).into(holder.image);
-                        //Loading all text information
-                        holder.title.setText(newTitle.get(position));
-                        holder.descrptn.setText(newDscrpt.get(position));
-                        holder.user.setText(newUser.get(position));
 
+                        //loading all images
+                        /*Glide.with(postContext)
+                                .asBitmap()
+                                .load().into(holder.image);*/
+                        //Loading all text information
+                        holder.title.setText(model.getTitle());
+                        holder.descrptn.setText(model.getDesc());
+                        holder.user.setText(user.getDisplayName());
                         holder.cardView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
