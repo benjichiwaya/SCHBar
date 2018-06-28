@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 
@@ -37,7 +39,8 @@ public class Post extends AppCompatActivity {
 
     private int GALLERY_REQUEST = 2;
     private Uri uri = null;
-    private Uri newUri = null;
+    final File file = new File( DOWNLOAD_SERVICE, "https://www.bing.com/images/search?view=detailV2&ccid=FWXXmz8i&id=8E7ACA133E32CA67435216BB3D90AF1E9264D44F&thid=OIP.FWXXmz8ih2xj_BEKu6-xhAHaEK&mediaurl=http%3a%2f%2fwww.dreadcentral.com%2fwp-content%2fuploads%2f2017%2f06%2frick-and-morty.jpg&exph=1080&expw=1920&q=rick+and+morty&simid=608017279566086681&selectedIndex=9");
+    private Uri newUri =  Uri.fromFile(file);
     private ImageView imgbutton;
     private EditText captionPost;
     private EditText captioNotes;
@@ -109,26 +112,19 @@ public class Post extends AppCompatActivity {
         final String caption = captionPost.getText().toString().trim();
         final String notes = captioNotes.getText().toString();
 
-        storageReference.child("UDC_URIs").putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                Uri completedUri = taskSnapshot.getUploadSessionUri();
-
-                newUri = completedUri;
-                Toast.makeText(Post.this, R.string.upload, Toast.LENGTH_SHORT);
-                wrtie_New_Data(user.getUid(),newUri.toString(),caption,notes);
-                startActivity(new Intent(Post.this,Choice.class ));
-
+        if(uri == null){
+                uri = newUri;
+        }else{
+                storageReference.child("UDC_URIs").child(user.getUid()).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Uri completedUri = taskSnapshot.getUploadSessionUri();
+                        newUri = completedUri;
+                    }
+                });
             }
-        });
+        wrtie_New_Data(user.getUid(),newUri.toString(),caption,notes);
 
-        storageReference.child("UDC_URIs").child(user.getUid()).putFile(uri).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Post.this, R.string.upload, Toast.LENGTH_SHORT);
-            }
-        });
     }
 
     private void wrtie_New_Data(String user, String uri, String title, String description ){
@@ -138,7 +134,8 @@ public class Post extends AppCompatActivity {
         localDatabase.child("Post").child(user).setValue(postItem).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-               startActivity( new Intent(Post.this, mainActivity.class));
+
+                startActivity(new Intent(Post.this,Choice.class ));
             }
         });
     }

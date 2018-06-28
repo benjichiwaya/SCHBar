@@ -1,17 +1,12 @@
 package com.example.chiwaya.schbar;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView.Adapter;
 
-import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerAdapter_LifecycleAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.*;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +27,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 public class mainActivity extends AppCompatActivity {
 
@@ -41,7 +36,7 @@ public class mainActivity extends AppCompatActivity {
     private FirebaseDatabase fireDatabase;
     private FirebaseUser user;
     private StorageReference storageReference;
-
+    private  View v;
     private static final String TAG = "mainActivity";
     private Context postContext;
 
@@ -52,15 +47,16 @@ public class mainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: Started with no errors");
 
+
          mainList = findViewById(R.id.mainRecyclerList);
          mainList.setHasFixedSize(false);
-         mainList.setLayoutManager( new LinearLayoutManager(this));
+         mainList.setLayoutManager(new LinearLayoutManager(this));
 
          storageReference = FirebaseStorage.getInstance().getReference("IMAGES/UDC/");
          localDatabase = FirebaseDatabase.getInstance().getReference("Posts");
     }
 
-    Query query = FirebaseDatabase.getInstance()
+        Query query = FirebaseDatabase.getInstance()
         .getReference().child("Post").limitToLast(10);
     ChildEventListener childEventListener = new ChildEventListener() {
         @Override
@@ -97,7 +93,8 @@ public class mainActivity extends AppCompatActivity {
 
 
         FirebaseRecyclerAdapter <PostItem, MainViewHolder> fireRecycler =
-                new FirebaseRecyclerAdapter<PostItem, MainViewHolder>(options){
+                new FirebaseRecyclerAdapter<PostItem, MainViewHolder>(options
+                ){
                     @Override
                     protected void onBindViewHolder(@NonNull MainViewHolder holder, int position, @NonNull PostItem model) {
                         Log.d(TAG, "onBindViewHolder: called");
@@ -108,7 +105,7 @@ public class mainActivity extends AppCompatActivity {
                                 .load().into(holder.image);*/
                         //Loading all text information
                         holder.title.setText(model.getTitle());
-                        holder.descrptn.setText(model.getDesc());
+                        holder.description.setText(model.getDesc());
                         holder.user.setText(user.getDisplayName());
                         holder.cardView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -144,7 +141,7 @@ public class mainActivity extends AppCompatActivity {
 
         ImageView image;
         CardView cardView;
-        TextView title, user, descrptn;
+        TextView title, user, description;
 
         public MainViewHolder(View itemView) {
                 super(itemView);
@@ -152,8 +149,24 @@ public class mainActivity extends AppCompatActivity {
                 image = itemView.findViewById(R.id.final_image);
                 cardView = itemView.findViewById(R.id.cardView_parent);
                 title = itemView.findViewById(R.id.post_descript);
-                descrptn = itemView.findViewById(R.id.post_notes);
+                description = itemView.findViewById(R.id.post_notes);
                 user = itemView.findViewById(R.id.card_user);
+        }
+
+        public void setUser(TextView user)
+        {
+            this.user = user;
+        }
+        public void setImage(ImageView image) {
+            this.image = image;
+        }
+
+        public void setTitle(TextView title) {
+            this.title = title;
+        }
+
+        public void setDescription(TextView description) {
+            this.description = description;
         }
     }
 }
