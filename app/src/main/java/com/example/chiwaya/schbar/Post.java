@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,11 +45,9 @@ public class Post extends AppCompatActivity {
     private ImageView imgbutton;
     private EditText captionPost;
     private EditText captioNotes;
-    private StorageReference storageReference, test;
-    private FirebaseDatabase onlineDatabase;
-    private DatabaseReference localDatabase;
+    private StorageReference storageReference;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+    private FirebaseFirestore db;
 
 
     @Override
@@ -58,10 +57,8 @@ public class Post extends AppCompatActivity {
         captionPost = findViewById(R.id.captionTitle);
         captioNotes = findViewById(R.id.captionText);
 
-        storageReference = FirebaseStorage.getInstance().getReference("SCHBar");
-        localDatabase = FirebaseDatabase.getInstance().getReference("Posts");
-
-        storageReference = FirebaseStorage.getInstance().getReference("IMAGES/UDC/");
+        db =FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference("SCHBar/UDC/");
     }
 
     public void addNewPhoto(View view) {
@@ -115,7 +112,7 @@ public class Post extends AppCompatActivity {
         if(uri == null){
                 uri = newUri;
         }else{
-                storageReference.child("UDC_URIs").child(user.getUid()).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                storageReference.child("UDC_URIs").child(user.getUid()).child(uri.getLastPathSegment()).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Uri completedUri = taskSnapshot.getUploadSessionUri();
@@ -123,20 +120,15 @@ public class Post extends AppCompatActivity {
                     }
                 });
             }
-        wrtie_New_Data(user.getUid(),newUri.toString(),caption,notes);
 
+        wrtie_New_Data(user.getUid(),newUri.toString(),caption,notes);
     }
 
     private void wrtie_New_Data(String user, String uri, String title, String description ){
 
         PostItem postItem = new PostItem(uri,title,description);
-
-        localDatabase.child("Post").child(user).setValue(postItem).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-                startActivity(new Intent(Post.this,Choice.class ));
-            }
-        });
+         /*
+         * Rember to add code for the Database
+         * */
     }
 }
