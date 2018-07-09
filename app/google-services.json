@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "471346134244-dsuu4sd8hashcf2nqn7mivseojfav4ee.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chiwaya.schbar",
+            "certificate_hash": "44e357fda610ba3a14481026ca3ebc43060e222e"
+          }
+        },
+        {
           "client_id": "471346134244-jdfhps05943mk13grned8ehi6u9qu600.apps.googleusercontent.com",
           "client_type": 3
         }

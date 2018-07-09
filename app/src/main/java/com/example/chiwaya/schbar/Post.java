@@ -1,16 +1,20 @@
+
 package com.example.chiwaya.schbar;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Gallery;
@@ -27,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -35,6 +40,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Post extends AppCompatActivity {
 
@@ -46,8 +53,8 @@ public class Post extends AppCompatActivity {
     private EditText captionPost;
     private EditText captioNotes;
     private StorageReference storageReference;
+    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private FirebaseFirestore db;
 
 
     @Override
@@ -57,7 +64,7 @@ public class Post extends AppCompatActivity {
         captionPost = findViewById(R.id.captionTitle);
         captioNotes = findViewById(R.id.captionText);
 
-        db =FirebaseFirestore.getInstance();
+
         storageReference = FirebaseStorage.getInstance().getReference("SCHBar/UDC/");
     }
 
@@ -126,9 +133,27 @@ public class Post extends AppCompatActivity {
 
     private void wrtie_New_Data(String user, String uri, String title, String description ){
 
-        PostItem postItem = new PostItem(uri,title,description);
-         /*
-         * Rember to add code for the Database
-         * */
+        Map<String, Object> postItem = new HashMap<>();
+
+        postItem.put("User",user);
+        postItem.put("Image_Uri",uri);
+        postItem.put("Title",title);
+        postItem.put("Description",description);
+
+        firestore.collection("SCHBar").document("UDC").collection("Posts").add(postItem)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(Post.this,"The post has been made",Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(Post.this, mainActivity.class));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Post.this,"The post failed",Toast.LENGTH_LONG).show();
+            }
+        });
+
+
     }
 }
