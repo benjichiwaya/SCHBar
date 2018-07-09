@@ -6,7 +6,10 @@ package com.example.chiwaya.schbar;
 
 public class PostItem {
 
-    public String title, desc, image, user;
+    public String title;
+    public String desc;
+    public String image;
+    public String user;
 
     public PostItem(){
     }
@@ -44,6 +47,13 @@ public class PostItem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
 }

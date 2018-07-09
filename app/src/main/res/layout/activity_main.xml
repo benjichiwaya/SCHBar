@@ -7,10 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.chiwaya.schbar.mainActivity"
     >
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/mainRecyclerList">
-    </android.support.v7.widget.RecyclerView>
+   <include layout="@layout/content_main"></include>
 
 </LinearLayout>
