@@ -7,47 +7,37 @@ package com.example.chiwaya.schbar;
 public class PostItem {
 
     public String title;
-    public String desc;
+    public String description;
     public String image;
     public String user;
 
     public PostItem(){
     }
 
-    public PostItem(String image,String title, String desc )
-    {
-        this.image = image;
-        this.title = title;
-        this.desc = desc;
-
-
-
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImage() {
         return image;
     }
 
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
     public void setImage(String image) {
         this.image = image;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
     public String getUser() {
         return user;
     }
@@ -55,5 +45,14 @@ public class PostItem {
     public void setUser(String user) {
         this.user = user;
     }
+
+    public PostItem(String User , String Image, String Title, String description)
+    {
+        this.user = User;
+        this.image = Image;
+        this.title = Title;
+        this.description = description;
+    }
+
 
 }

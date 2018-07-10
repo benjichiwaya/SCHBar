@@ -2,35 +2,29 @@
 package com.example.chiwaya.schbar;
 
 import android.app.Activity;
-import android.app.Application;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
+
 import android.net.Uri;
-import android.nfc.Tag;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Gallery;
-import android.widget.ImageButton;
+
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,15 +33,15 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Post extends AppCompatActivity {
 
     private int GALLERY_REQUEST = 2;
-    private Uri uri = null;
-    final File file = new File( DOWNLOAD_SERVICE, "https://www.bing.com/images/search?view=detailV2&ccid=FWXXmz8i&id=8E7ACA133E32CA67435216BB3D90AF1E9264D44F&thid=OIP.FWXXmz8ih2xj_BEKu6-xhAHaEK&mediaurl=http%3a%2f%2fwww.dreadcentral.com%2fwp-content%2fuploads%2f2017%2f06%2frick-and-morty.jpg&exph=1080&expw=1920&q=rick+and+morty&simid=608017279566086681&selectedIndex=9");
+    private Uri uri ;
+    final File file = new File( DOWNLOAD_SERVICE, "https://firebasestorage.googleapis.com/v0/b/checkit-db.appspot.com/o/" +
+                                                        "SCHBar%2FUDC%2FUDC_URIs%2FRdG0KjiMdCPqaUj0Dvo4cu6Y40H2%2F18717?alt=media&token=74a62205-2dfc-4f44-88f8-202837aa7454");
     private Uri newUri =  Uri.fromFile(file);
     private ImageView imgbutton;
     private EditText captionPost;
@@ -119,28 +113,34 @@ public class Post extends AppCompatActivity {
         if(uri == null){
                 uri = newUri;
         }else{
-                storageReference.child("UDC_URIs").child(user.getUid()).child(uri.getLastPathSegment()).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Uri completedUri = taskSnapshot.getUploadSessionUri();
-                        newUri = completedUri;
-                    }
-                });
+                storageReference.child("UDC_URIs").child(user.getUid()).child(uri.getLastPathSegment()).putFile(uri)
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        })
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                  uri = taskSnapshot.getUploadSessionUri();
+                            }
+                        });
             }
 
-        wrtie_New_Data(user.getUid(),newUri.toString(),caption,notes);
+        write_New_Data(user.getUid(),newUri.toString(),caption,notes);
     }
 
-    private void wrtie_New_Data(String user, String uri, String title, String description ){
+    private void write_New_Data(String user, String uri, String title, String description ){
 
         Map<String, Object> postItem = new HashMap<>();
 
-        postItem.put("User",user);
-        postItem.put("Image_Uri",uri);
-        postItem.put("Title",title);
-        postItem.put("Description",description);
+        postItem.put("user",user);
+        postItem.put("imageUri",uri);
+        postItem.put("title",title);
+        postItem.put("description",description);
 
-        firestore.collection("SCHBar").document("UDC").collection("Posts").add(postItem)
+        firestore.collection("Posts").add(postItem)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {

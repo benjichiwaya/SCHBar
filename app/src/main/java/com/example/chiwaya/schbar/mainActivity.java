@@ -1,6 +1,5 @@
 package com.example.chiwaya.schbar;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,25 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class mainActivity extends AppCompatActivity {
 
-    private RecyclerView mainList;
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private static final String TAG = "mainActivity";
     private Context postContext = this;
-    private Query query;
     private FirestoreRecyclerAdapter<PostItem,SCHBarViewHolder> firebaseAdapter;
+    private Query query;
+    private RecyclerView mainList;
 
 /*
 * Dont forget to addd Key = getKey(), its important for indexing
@@ -41,73 +34,61 @@ public class mainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onCreate: This is the first failure");
+
+        firebaseAdapter.startListening();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "onCreate: Started with no errors");
-         mainList = findViewById(R.id.mainRecyclerList);
-         mainList.setHasFixedSize(true);
-         mainList.setLayoutManager(new LinearLayoutManager(postContext));
+        Log.d(TAG, "onCreate: Started with no errors ******************************************************************************");
+        mainList = findViewById(R.id.mainRecyclerList);
+        mainList.setHasFixedSize(false);
+        mainList.setLayoutManager(new LinearLayoutManager(postContext));
+        firestore.collection("SCHBar").document("UDC").collection("Posts").limit(10);
 
          loadData();
-
-         setUpAdapter();
-         mainList.setAdapter(firebaseAdapter);
+        Log.d(TAG, "onCreate: This worked *******************************************************************************");
+        setUpAdapter();
 
     }
 
     private void loadData() {
-        CollectionReference localDatabase = firestore.collection("SCHBar").document("UDC").collection("Posts");
-
-        localDatabase.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful())
-                {
-                   query = task.getResult().getQuery().limit(10);
-                }
-            }
-        });
+        query = firestore.collection("Posts").limit(10);
     }
 
     private void setUpAdapter ()
     {
 
-       FirebaseRecyclerOptions<PostItem> options = new FirestoreRecyclerOptions.Builder<>().setQuery(query,PostItem.class).build();
+        FirestoreRecyclerOptions<PostItem> options = new FirestoreRecyclerOptions
+               .Builder<PostItem>().setQuery(query,PostItem.class).build();
 
-        firebaseAdapter = new FirestoreRecyclerAdapter<PostItem, SCHBarViewHolder>(options){
-            @Override
-            protected void onBindViewHolder(@NonNull SCHBarViewHolder holder, int position, @NonNull PostItem model) {
+               firebaseAdapter = new FirestoreRecyclerAdapter<PostItem, SCHBarViewHolder>(options) {
+                   @Override
+                   protected void onBindViewHolder(@NonNull SCHBarViewHolder holder, int position, @NonNull PostItem model) {
 
-                Log.d(TAG, "onBindViewHolder: called");
+                       Log.d(TAG, "onBindViewHolder: called");
 
-                holder.setView(mainActivity.this,model.getUser(),model.getImage(),model.getTitle(),model.getDesc());
+                       holder.setView(mainActivity.this, model.getUser(), model.getImage(), model.getTitle(), model.getDescription());
 
-                holder.view.findViewById(R.id.card_user).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(mainActivity.this,"Something worked",Toast.LENGTH_SHORT).show();
-                    }
-                });
+                       Toast.makeText(mainActivity.this, "Something worked", Toast.LENGTH_SHORT).show();
 
-            }
-            @NonNull
-            @Override
-            public SCHBarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                   }
 
-                Context context = parent.getContext();
-                LayoutInflater inflater = LayoutInflater.from(context);
+                   @NonNull
+                   @Override
+                   public SCHBarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-                View myView = inflater.inflate(R.layout.main_row, parent, false);
-                SCHBarViewHolder viewHolder = new SCHBarViewHolder(myView);
-                return viewHolder;
-            }
-        };
+                       Context context = parent.getContext();
+                       LayoutInflater inflater = LayoutInflater.from(context);
 
-
+                       View myView = inflater.inflate(R.layout.main_row, parent, false);
+                       SCHBarViewHolder viewHolder = new SCHBarViewHolder(myView);
+                       return viewHolder;
+                   }
+               };
+        mainList.setAdapter(firebaseAdapter);
     }
 }
 
