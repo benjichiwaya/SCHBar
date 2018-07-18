@@ -10,13 +10,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
-
-
-import com.basgeekball.awesomevalidation.AwesomeValidation;
-import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,13 +29,15 @@ public class Registration extends AppCompatActivity {
     private FirebaseAuth firebaseAuth= FirebaseAuth.getInstance();
     private EditText username, email, password, passwordConfirm;
     public Toast toast;
-    private FirebaseUser User;
+    private FirebaseUser user;
     private FirebaseFirestore firestore;
     private String login;
     private String pass;
     private String userName;
     private String passConf;
     private static final String TAG = Registration.class.getName();
+
+    Choice choice = new Choice();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +84,8 @@ public class Registration extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
-                                FirebaseUser user = firebaseAuth.getCurrentUser();
                                 toast.makeText(Registration.this, R.string.user_created, toast.LENGTH_SHORT).show();
-                                creat_User_Auth(login, pass);
+                                choice.sendUser_Info(login,userName);
                                 return;
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -103,27 +99,6 @@ public class Registration extends AppCompatActivity {
             {
                 Toast.makeText(this, R.string.one_entry_missing, Toast.LENGTH_SHORT).show();
             }
-
-    }
-
-    private void creat_User_Auth(String login,  String pass)
-    {
-        Map<String, Object> user = new HashMap<>();
-
-        user.put("User", userName);
-        user.put("Email", login);
-         firestore.collection("Users").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-        @Override
-        public void onSuccess(DocumentReference documentReference) {
-            startActivity(new Intent(Registration.this, Choice.class));
-        }
-    }).addOnFailureListener(new OnFailureListener() {
-        @Override
-        public void onFailure(@NonNull Exception e) {
-            toast.makeText(Registration.this, R.string.auth_failed, toast.LENGTH_SHORT).show();
-            Log.w(TAG,"It failed here because of: ",e);
-        }
-    });
 
     }
 

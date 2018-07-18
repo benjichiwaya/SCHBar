@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -48,7 +49,8 @@ public class Post extends AppCompatActivity {
     private EditText captioNotes;
     private StorageReference storageReference;
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String user_DB_name = "User Unkown";
+    private FirebaseUser firebaseUser;
 
 
     @Override
@@ -109,26 +111,27 @@ public class Post extends AppCompatActivity {
         //creat a safe check for cases where there is no image attached
         final String caption = captionPost.getText().toString().trim();
         final String notes = captioNotes.getText().toString();
+        final String user = firestore.collection("Users").whereEqualTo("User", firebaseUser.getUid()).toString();
 
         if(uri == null){
                 uri = newUri;
         }else{
-                storageReference.child("UDC_URIs").child(user.getUid()).child(uri.getLastPathSegment()).putFile(uri)
+                storageReference.child("UDC_URIs").child(user).child(uri.getLastPathSegment()).putFile(uri)
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-
                             }
                         })
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                   uri = taskSnapshot.getUploadSessionUri();
+                                write_New_Data(user,newUri.toString(),caption,notes);
                             }
                         });
             }
 
-        write_New_Data(user.getUid(),newUri.toString(),caption,notes);
+
     }
 
     private void write_New_Data(String user, String uri, String title, String description ){

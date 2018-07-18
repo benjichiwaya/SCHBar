@@ -118,4 +118,6 @@
     <string name="user_created">New user created</string>
     <string name="benjie">Anonymous User</string>
     <string name="auth_failed">Authentication failed.</string>
+    <string name="stay_signed">Stay signed in</string>
+    <string name="login_saved">Login has been Saved</string>
 </resources>
