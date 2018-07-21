@@ -1,6 +1,7 @@
 package com.example.chiwaya.schbar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +9,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -47,9 +50,26 @@ public class mainActivity extends AppCompatActivity {
         mainList.setLayoutManager(new LinearLayoutManager(postContext));
         firestore.collection("SCHBar").document("UDC").collection("Posts").limit(10);
 
-         loadData();
+        loadData();
         Log.d(TAG, "onCreate: This worked *******************************************************************************");
         setUpAdapter();
+
+        mainList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
 
     }
 
@@ -68,23 +88,33 @@ public class mainActivity extends AppCompatActivity {
                    protected void onBindViewHolder(@NonNull SCHBarViewHolder holder, int position, @NonNull PostItem model) {
 
                        Log.d(TAG, "onBindViewHolder: called");
-
                        holder.setView(model.getUser(), model.getImageUri(), model.getTitle(), model.getDescription());
+
+
 
                    }
 
                    @NonNull
                    @Override
-                   public SCHBarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                   public SCHBarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, final int viewType) {
 
                        Context context = parent.getContext();
                        LayoutInflater inflater = LayoutInflater.from(context);
 
                        View myView = inflater.inflate(R.layout.main_row, parent, false);
                        SCHBarViewHolder viewHolder = new SCHBarViewHolder(myView);
+                       myView.setOnClickListener(new View.OnClickListener() {
+                           @Override
+                           public void onClick(View v) {
+                               Toast.makeText(v.getContext(), "position = ", Toast.LENGTH_SHORT).show();
+
+                           }
+                       });
                        return viewHolder;
+
                    }
                };
+
         mainList.setAdapter(firebaseAdapter);
     }
 }
