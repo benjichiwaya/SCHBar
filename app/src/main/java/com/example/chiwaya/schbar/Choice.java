@@ -29,7 +29,6 @@ public class Choice extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice);
-        creat_User_Database();
     }
 
     public void nerdClicked(View view) {
@@ -41,28 +40,4 @@ public class Choice extends AppCompatActivity {
         startActivity( new Intent(Choice.this, mainActivity.class));
     }
 
-    protected void creat_User_Database() {
-        Map<String, Object> User = new HashMap<>();
-
-        User.put("User", UserName);
-        User.put("Email", Login);
-
-        firestore.collection("Users").add(User).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                startActivity(new Intent(Choice.this, Choice.class));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Choice.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
-    public void sendUser_Info(String login, String userName) {
-        this.Login = login;
-        this.UserName = userName;
-    }
 }

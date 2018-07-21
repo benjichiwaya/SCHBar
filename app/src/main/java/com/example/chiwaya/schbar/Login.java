@@ -19,6 +19,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -37,6 +38,7 @@ public class Login extends AppCompatActivity {
     private CheckBox checkBox;
     private String pass,login;
     private SharedPreferences sharedPreferences;
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class Login extends AppCompatActivity {
         textView = findViewById(R.id.text_register);
         imageView = findViewById(R.id.imageView);
         checkBox = findViewById(R.id.checkBox);
+        button = findViewById(R.id.login_button);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -61,33 +64,32 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(Login.this, R.string.login_saved,
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, R.string.login_saved, Toast.LENGTH_SHORT).show();
+
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+
                             startActivity(new Intent(Login.this, Choice.class));
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If sign in fails,
+                            textView.setVisibility(View.VISIBLE);
+                            email.setVisibility(View.VISIBLE);
+                            password.setVisibility(View.VISIBLE);
+                            button.setVisibility(View.VISIBLE);
+                            checkBox.setVisibility(View.VISIBLE);
                         }
                     }
                 });
 
     }
 
-
-    public void testEmail(boolean test)
-    {
-        if(test){
-            email.setError("Please Enter Valid Email");
-        }
-    }
-
     public void register_Account(View view) {
-
         startActivity(new Intent(Login.this ,Registration.class));
     }
 
     public void Login_Account(View view) {
 
+        login = email.getText().toString();
+        pass = password.getText().toString();
 
         if (login.isEmpty()||pass.isEmpty()){
             Toast.makeText(Login.this, R.string.one_entry_missing,
@@ -100,8 +102,26 @@ public class Login extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
+
                                 FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                        if(isChecked)
+                                        {
+
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            editor.putString("User",login);
+                                            editor.putString("Passcode",pass);
+                                            editor.commit();
+                                            editor.apply();
+                                        }
+                                    }
+                                });
+
                                 startActivity(new Intent(Login.this, Choice.class));
+
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(Login.this, R.string.auth_failed,
@@ -109,16 +129,6 @@ public class Login extends AppCompatActivity {
                             }
                         }
                     });
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    if(isChecked)
-                    {
-
-                    }
-                }
-            });
         }
     }
 }

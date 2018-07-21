@@ -8,7 +8,7 @@ public class PostItem {
 
     public String title;
     public String description;
-    public String image;
+    public String imageUri;
     public String user;
 
     public PostItem(){
@@ -30,29 +30,10 @@ public class PostItem {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
-    }
+    public String getImageUri() { return imageUri; }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
+    public void setImageUri(String imageUri) { this.imageUri = imageUri; }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public PostItem(String User , String Image, String Title, String description)
-    {
-        this.user = User;
-        this.image = Image;
-        this.title = Title;
-        this.description = description;
-    }
-
+    public String getUser() { return user; }
 
 }

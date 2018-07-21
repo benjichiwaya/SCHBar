@@ -120,4 +120,5 @@
     <string name="auth_failed">Authentication failed.</string>
     <string name="stay_signed">Stay signed in</string>
     <string name="login_saved">Login has been Saved</string>
+    <string name="img_btn_camera">Clickable</string>
 </resources>

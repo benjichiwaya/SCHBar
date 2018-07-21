@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -55,7 +54,7 @@ public class mainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        query = firestore.collection("Posts").limit(10);
+        query = firestore.collection("Posts").limit(30);
     }
 
     private void setUpAdapter ()
@@ -70,9 +69,7 @@ public class mainActivity extends AppCompatActivity {
 
                        Log.d(TAG, "onBindViewHolder: called");
 
-                       holder.setView(mainActivity.this, model.getUser(), model.getImage(), model.getTitle(), model.getDescription());
-
-                       Toast.makeText(mainActivity.this, "Something worked", Toast.LENGTH_SHORT).show();
+                       holder.setView(model.getUser(), model.getImageUri(), model.getTitle(), model.getDescription());
 
                    }
 
