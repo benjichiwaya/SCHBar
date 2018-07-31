@@ -68,14 +68,9 @@ public class Login extends AppCompatActivity {
 
                             FirebaseUser user = firebaseAuth.getCurrentUser();
 
-                            startActivity(new Intent(Login.this, Choice.class));
+                            startActivity(new Intent(Login.this, mainActivity.class));
                         } else {
                             // If sign in fails,
-                            textView.setVisibility(View.VISIBLE);
-                            email.setVisibility(View.VISIBLE);
-                            password.setVisibility(View.VISIBLE);
-                            button.setVisibility(View.VISIBLE);
-                            checkBox.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -120,7 +115,7 @@ public class Login extends AppCompatActivity {
                                     }
                                 });
 
-                                startActivity(new Intent(Login.this, Choice.class));
+                                startActivity(new Intent(Login.this, mainActivity.class));
 
                             } else {
                                 // If sign in fails, display a message to the user.

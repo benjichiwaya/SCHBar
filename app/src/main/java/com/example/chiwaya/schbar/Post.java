@@ -148,7 +148,7 @@ public class Post extends AppCompatActivity {
          switch(requestCode) {
              case CAMERA_REQUEST:
                  if(resultCode == RESULT_OK){
-                     Uri selectedImage = imageReturnedIntent.getData().normalizeScheme();
+                     Uri selectedImage = imageReturnedIntent.getData();
                      imageview.setImageURI(selectedImage);
                      uri = selectedImage;
                  }
@@ -175,9 +175,9 @@ public class Post extends AppCompatActivity {
         if(uri == null){
                 Toast.makeText(this, "Image was not uploaded, please spick imageUri again",Toast.LENGTH_SHORT).show();
         }else{
-                final StorageReference store = storageReference.child(user);
+                final StorageReference store = storageReference.child(user).child("Posts")
+                        .child(uri.getLastPathSegment());
                 final UploadTask uploadTask;
-                store.child(uri.getLastPathSegment());
                 uploadTask = store.putFile(uri);
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
@@ -185,7 +185,6 @@ public class Post extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             throw task.getException();
                         }
-
                         // Continue with the task to get the download URL
                         return store.getDownloadUrl();
                     }
@@ -195,10 +194,6 @@ public class Post extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Uri downloadUri = task.getResult();
                             write_New_Data(user,downloadUri.toString(),caption,notes);
-
-                        } else {
-                            // Handle failures
-                            // ...
                         }
                     }
                 });
