@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/hu_logo"
+            android:title="@string/howard" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/udc_logo"
+            android:title="@string/udc" />
+        <item
+            android:id="@+id/nav_manage"
+            android:title="@string/sign_out"
+            />
+    </group>
+
+</menu>
