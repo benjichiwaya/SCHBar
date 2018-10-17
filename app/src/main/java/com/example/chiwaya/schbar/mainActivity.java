@@ -1,19 +1,14 @@
 package com.example.chiwaya.schbar;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,12 +18,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -167,6 +159,32 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if (id == R.id.howard_menu)
+        {
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient1);
+                    findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient1);
+                    return true ;
+                }
+            });
+
+            Toast.makeText(this,"Howard Stream",Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.udc_menu) {
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient2);
+                    findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient2);
+                    return true;
+                }
+            });
+            Toast.makeText(this,"UDC Stream",Toast.LENGTH_SHORT).show();
+
+        }
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -180,7 +198,8 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_gallery)
+
+        if (id == R.id.howard_menu)
         {
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
@@ -192,7 +211,9 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
                 }
             });
 
-        } else if (id == R.id.nav_slideshow) {
+            Toast.makeText(this,"Howard Stream",Toast.LENGTH_SHORT).show();
+        }
+        else if (id == R.id.udc_menu) {
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -201,9 +222,9 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
                     return true;
                 }
             });
+            Toast.makeText(this,"UDC Stream",Toast.LENGTH_SHORT).show();
 
-
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.sign_out) {
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -215,7 +236,7 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
