@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
-
-    <group android:checkableBehavior="single">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <group android:checkableBehavior="single" android:visible="true" android:menuCategory="container" android:enabled="true">
         <item
             android:id="@+id/howard_menu"
             android:icon="@drawable/hu_logo"
-            android:title="@string/howard" />
+            android:title="@string/howard"
+            android:checkable="true"
+            android:visible="true"
+            app:showAsAction="always|withText|collapseActionView"
+
+            />
         <item
             android:id="@+id/udc_menu"
             android:icon="@drawable/udc_logo"
-            android:title="@string/udc" />
+            android:title="@string/udc"
+            android:checkable="true"
+            app:showAsAction="always|withText|collapseActionView"/>
         <item
             android:id="@+id/sign_out"
             android:title="@string/sign_out"
+            android:checkable="true"
+            app:showAsAction="always|withText|collapseActionView"
             />
     </group>
 

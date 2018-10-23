@@ -18,9 +18,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -28,7 +30,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class mainActivity extends AppCompatActivity     implements NavigationView.OnNavigationItemSelectedListener {
+public class mainActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private static final String TAG = "mainActivity";
@@ -41,6 +43,7 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
     private String Title;
     private String Notes;
     private FloatingActionButton fab;
+
     NavigationView navigationView;
 
 /*
@@ -60,16 +63,42 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Started with no errors ******************************************************************************");
 
-        @SuppressLint("WrongViewCast")
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        @SuppressLint("WrongViewCast") final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView =  findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        switch (menuItem.getItemId()) {
+                            case R.menu.activity_main2_drawer:
+                                menuItem.setChecked(true);
+                                drawer.closeDrawers();
+                                Toast.makeText(mainActivity.this,"Howard Stream",Toast.LENGTH_SHORT).show();
+                                findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient2);
+                                findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient2);
+                            // close drawer when item is tapped
+
+
+                            // Add code here to update the UI based on the item selected
+                            // For example, swap UI fragments here
+                        }
+                        menuItem.setChecked(true);
+                        drawer.closeDrawers();
+                        return true;
+                    }
+                });
+
+        //    Toast.makeText(this,"Howard Stream",Toast.LENGTH_SHORT).show();
+        //                findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient2);
+        //                findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient2);
+        //                item.setChecked(true);
         mainList = findViewById(R.id.mainRecyclerList);
         mainList.setHasFixedSize(false);
         mainList.setLayoutManager(new LinearLayoutManager(postContext));
@@ -97,12 +126,12 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
 
     private void setUpAdapter ()
     {
-        FirestoreRecyclerOptions<PostItem> options = new FirestoreRecyclerOptions
+        final FirestoreRecyclerOptions<PostItem> options = new FirestoreRecyclerOptions
                .Builder<PostItem>().setQuery(query,PostItem.class).build();
 
                firebaseAdapter = new FirestoreRecyclerAdapter<PostItem, SCHBarViewHolder>(options) {
                    @Override
-                   protected void onBindViewHolder(@NonNull final SCHBarViewHolder holder, final int position, @NonNull PostItem model) {
+                   protected void onBindViewHolder(@NonNull final SCHBarViewHolder holder, final int position, @NonNull final PostItem model) {
 
                         Log.d(TAG, "onBindViewHolder: called");
                         holder.setView(model.getUser(), model.getImageUri(), model.getTitle(), model.getDescription());
@@ -111,8 +140,14 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
                         Title = model.getTitle();
                         Notes = model.getDescription();
 
-                        //holder.itemView.setOnClickListener(new View.OnClickListener() {@Override public void onClick(View v) { }});
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
+                                //this setOnClickListener function is unique to SCHBARVIewHOlder.. no need to override already existing onClick method.
+                                holder.setOnClickListener(mainActivity.this,holder,model);
+                            }
+                        });
                    }
                    @NonNull
                    @Override
@@ -122,123 +157,14 @@ public class mainActivity extends AppCompatActivity     implements NavigationVie
                        LayoutInflater inflater = LayoutInflater.from(context);
 
                        View myView = inflater.inflate(R.layout.main_row, parent, false);
-                      final SCHBarViewHolder viewHolder = new SCHBarViewHolder(myView);
-                       viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                           @Override
-                           public void onClick(View v) {
-                               Intent intent = new Intent(mainActivity.this,Details.class);
-                               ActivityOptionsCompat appOptions1 = ActivityOptionsCompat
-                                       .makeSceneTransitionAnimation(mainActivity.this, viewHolder.Image, ViewCompat.getTransitionName(viewHolder.Image));
-                               intent.putExtra("User",User);
-                               intent.putExtra("Image",uri);
-                               intent.putExtra("Title",Title);
-                               intent.putExtra("Description",Notes);
+                       final SCHBarViewHolder viewHolder = new SCHBarViewHolder(myView);
 
-                               startActivity(intent,appOptions1.toBundle());
-                           }
-                       });
                        return viewHolder;
                    }
+
                };
                mainList.setAdapter(firebaseAdapter);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.howard_menu)
-        {
-            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-
-                    findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient1);
-                    findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient1);
-                    return true ;
-                }
-            });
-
-            Toast.makeText(this,"Howard Stream",Toast.LENGTH_SHORT).show();
-        }
-        else if (id == R.id.udc_menu) {
-            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient2);
-                    findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient2);
-                    return true;
-                }
-            });
-            Toast.makeText(this,"UDC Stream",Toast.LENGTH_SHORT).show();
-
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.howard_menu)
-        {
-            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-
-                    findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient1);
-                    findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient1);
-                    return true ;
-                }
-            });
-
-            Toast.makeText(this,"Howard Stream",Toast.LENGTH_SHORT).show();
-        }
-        else if (id == R.id.udc_menu) {
-            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient2);
-                    findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient2);
-                    return true;
-                }
-            });
-            Toast.makeText(this,"UDC Stream",Toast.LENGTH_SHORT).show();
-
-        } else if (id == R.id.sign_out) {
-            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    Application application = new Application();
-                    application.onTerminate();
-                    return true;
-                }
-            });
-
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 }
 

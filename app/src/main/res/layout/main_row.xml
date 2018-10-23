@@ -6,12 +6,14 @@
     android:layout_height="330dp"
     android:layout_margin="7dp"
     http:cardElevation="10dp"
-    android:id="@+id/cardView_parent">
+    android:id="@+id/cardView_parent"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="377dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <TextView
             android:id="@+id/card_user"

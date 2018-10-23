@@ -1,8 +1,15 @@
 package com.example.chiwaya.schbar;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +24,7 @@ public class SCHBarViewHolder extends RecyclerView.ViewHolder {
     TextView Title;
     ImageView Image;
     TextView User;
+
 
     public SCHBarViewHolder(View itemView)
     {
@@ -36,4 +44,16 @@ public class SCHBarViewHolder extends RecyclerView.ViewHolder {
         Title.setText(title);
         Description.setText(descrption);
     }
+     public void setOnClickListener(Context context, SCHBarViewHolder viewHolder, PostItem postItem)
+     {
+         Intent intent = new Intent(context,Details.class);
+         ActivityOptionsCompat appOptions1 = ActivityOptionsCompat
+                 .makeSceneTransitionAnimation((Activity) context, viewHolder.Image,
+                         ViewCompat.getTransitionName(viewHolder.Image));
+         intent.putExtra("User", postItem.getUser());
+         intent.putExtra("Image",postItem.getImageUri());
+         intent.putExtra("Title", postItem.getTitle());
+         intent.putExtra("Description", postItem.getDescription());
+         context.startActivity(intent,appOptions1.toBundle());
+     }
 }
