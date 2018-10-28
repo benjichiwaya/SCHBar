@@ -6,15 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_main"
-    android:padding="7dp">
+    tools:showIn="@layout/drawer"
+    android:padding="5dp">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mainRecyclerList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white">
     </android.support.v7.widget.RecyclerView>
-
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,5 +27,4 @@
         android:transitionName="action_button"
         android:onClick="Publish"
         />
-    <include layout="@layout/drawer"> </include>
 </RelativeLayout>

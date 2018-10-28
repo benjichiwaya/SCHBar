@@ -38,17 +38,11 @@ public class mainActivity extends AppCompatActivity {
     private FirestoreRecyclerAdapter<PostItem,SCHBarViewHolder> firebaseAdapter;
     private Query query;
     private RecyclerView mainList;
-    private String uri;
-    private String User;
-    private String Title;
-    private String Notes;
     private FloatingActionButton fab;
-
     NavigationView navigationView;
+    private  DrawerLayout maindrawer;
 
-/*
-* Dont forget to addd Key = getKey(), its important for indexing
-* */
+    // Dont forget to addd Key = getKey(), its important for indexing
 
     @Override
     protected void onStart() {
@@ -56,23 +50,17 @@ public class mainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: This is the first failure");
         firebaseAdapter.startListening();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Started with no errors ******************************************************************************");
 
-        @SuppressLint("WrongViewCast")
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        drawer.closeDrawers();
+        maindrawer = findViewById(R.id.drawer_layout);
 
         navigationView =  findViewById(R.id.nav_view);
 
+        // This code sets that onclick listener for the individual items in the navigator list.
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -81,26 +69,19 @@ public class mainActivity extends AppCompatActivity {
                         switch (menuItem.getItemId()) {
                             case R.id.howard_menu:
                                 menuItem.setChecked(true);
-                                drawer.closeDrawers();
+                                maindrawer.closeDrawers();
                                 Toast.makeText(mainActivity.this,"Howard Stream",Toast.LENGTH_SHORT).show();
                                 findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient1);
                                 findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient1);
-                            // close drawer when item is tapped
-
-
-                            // Add code here to update the UI based on the item selected
+                            // close drawer when item is tapped// Add code here to update the UI based on the item selected
                             // For example, swap UI fragments here
                         }
                         menuItem.setChecked(true);
-                        drawer.closeDrawers();
+                        maindrawer.closeDrawers();
                         return false;
                     }
                 });
 
-        //    Toast.makeText(this,"Howard Stream",Toast.LENGTH_SHORT).show();
-        //                findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient2);
-        //                findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient2);
-        //                item.setChecked(true);
         mainList = findViewById(R.id.mainRecyclerList);
         mainList.setHasFixedSize(false);
         mainList.setLayoutManager(new LinearLayoutManager(postContext));
@@ -121,31 +102,21 @@ public class mainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void loadData() {
         query = firestore.collection("Posts").limit(30);
     }
-
     private void setUpAdapter ()
     {
         final FirestoreRecyclerOptions<PostItem> options = new FirestoreRecyclerOptions
                .Builder<PostItem>().setQuery(query,PostItem.class).build();
-
                firebaseAdapter = new FirestoreRecyclerAdapter<PostItem, SCHBarViewHolder>(options) {
                    @Override
                    protected void onBindViewHolder(@NonNull final SCHBarViewHolder holder, final int position, @NonNull final PostItem model) {
-
                         Log.d(TAG, "onBindViewHolder: called");
                         holder.setView(model.getUser(), model.getImageUri(), model.getTitle(), model.getDescription());
-                        User = model.getUser();
-                        uri = model.getImageUri();
-                        Title = model.getTitle();
-                        Notes = model.getDescription();
-
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
                                 //this setOnClickListener function is unique to SCHBARVIewHOlder.. no need to override already existing onClick method.
                                 holder.setOnClickListener(mainActivity.this,holder,model);
                             }
@@ -154,16 +125,12 @@ public class mainActivity extends AppCompatActivity {
                    @NonNull
                    @Override
                    public SCHBarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, final int viewType) {
-
                        Context context = parent.getContext();
                        LayoutInflater inflater = LayoutInflater.from(context);
-
                        View myView = inflater.inflate(R.layout.main_row, parent, false);
                        final SCHBarViewHolder viewHolder = new SCHBarViewHolder(myView);
-
                        return viewHolder;
                    }
-
                };
                mainList.setAdapter(firebaseAdapter);
     }
