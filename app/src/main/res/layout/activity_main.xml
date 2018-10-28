@@ -8,8 +8,7 @@
     android:id="@+id/mainActivity"
     android:background="@drawable/gradient2"
     tools:context="com.example.chiwaya.schbar.mainActivity">
-    <include layout="@layout/drawer">
+    <include layout="@layout/content_main"></include>
 
-    </include>
 
 </LinearLayout>

@@ -63,11 +63,13 @@ public class mainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Started with no errors ******************************************************************************");
 
-        @SuppressLint("WrongViewCast") final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        @SuppressLint("WrongViewCast")
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        drawer.closeDrawers();
 
         navigationView =  findViewById(R.id.nav_view);
 
@@ -77,12 +79,12 @@ public class mainActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         // set item as selected to persist highlight
                         switch (menuItem.getItemId()) {
-                            case R.menu.activity_main2_drawer:
+                            case R.id.howard_menu:
                                 menuItem.setChecked(true);
                                 drawer.closeDrawers();
                                 Toast.makeText(mainActivity.this,"Howard Stream",Toast.LENGTH_SHORT).show();
-                                findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient2);
-                                findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient2);
+                                findViewById(R.id.imageView_header).setBackgroundResource(R.drawable.gradient1);
+                                findViewById(R.id.mainActivity).setBackgroundResource(R.drawable.gradient1);
                             // close drawer when item is tapped
 
 
@@ -91,7 +93,7 @@ public class mainActivity extends AppCompatActivity {
                         }
                         menuItem.setChecked(true);
                         drawer.closeDrawers();
-                        return true;
+                        return false;
                     }
                 });
 

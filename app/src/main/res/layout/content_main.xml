@@ -8,7 +8,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main"
     android:padding="7dp">
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mainRecyclerList"
         android:layout_width="match_parent"
@@ -29,5 +28,5 @@
         android:transitionName="action_button"
         android:onClick="Publish"
         />
-
+    <include layout="@layout/drawer"> </include>
 </RelativeLayout>
