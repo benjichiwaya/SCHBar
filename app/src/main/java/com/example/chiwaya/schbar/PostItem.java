@@ -10,6 +10,7 @@ public class PostItem {
     public String description;
     public String imageUri;
     public String user;
+    public String display_photo;
 
     public PostItem(){
     }
@@ -36,4 +37,11 @@ public class PostItem {
 
     public String getUser() { return user; }
 
+    public String getDisplay_photo() {
+        return display_photo;
+    }
+
+    public void setDisplay_photo(String display_photo) {
+        this.display_photo = display_photo;
+    }
 }

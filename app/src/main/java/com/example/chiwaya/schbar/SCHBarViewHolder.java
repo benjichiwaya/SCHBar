@@ -3,16 +3,14 @@ package com.example.chiwaya.schbar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
+
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.squareup.picasso.Picasso;
@@ -23,6 +21,7 @@ public class SCHBarViewHolder extends RecyclerView.ViewHolder {
     TextView Description;
     TextView Title;
     ImageView Image;
+    ImageView Display_photo;
     TextView User;
 
 
@@ -32,15 +31,17 @@ public class SCHBarViewHolder extends RecyclerView.ViewHolder {
         view = itemView.getRootView();
     }
 
-    public void setView( String user, String image, String title, String descrption)
+    public void setView( String user, String image, String title, String descrption, String display_pic)
     {
         User = view.findViewById(R.id.card_user);
         Image = view.findViewById(R.id.final_image);
+        Display_photo = view.findViewById(R.id.user_display);
         Title = view.findViewById(R.id.post_descript);
         Description = view.findViewById(R.id.post_notes);
         Log.d(TAG,"||||||| this is where the "+image+"is. Hope it shows");
         User.setText(user);
         Picasso.get().load(image).into(Image);
+        Picasso.get().load(display_pic).into(Display_photo);
         Title.setText(title);
         Description.setText(descrption);
     }
