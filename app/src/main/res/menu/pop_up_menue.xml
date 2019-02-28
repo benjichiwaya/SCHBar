@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.chiwaya.schbar.Post">
+    <item
+        android:id="@+id/litness"
+        android:orderInCategory="100"
+        android:title="@string/lit"
+         />
+    <item
+        android:id="@+id/academics"
+        android:orderInCategory="100"
+        android:title="@string/academic" />
+    <item
+        android:id="@+id/athletics"
+        android:orderInCategory="100"
+        android:title="@string/atheltic"/>
+</menu>

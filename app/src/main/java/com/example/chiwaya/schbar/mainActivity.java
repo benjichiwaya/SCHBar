@@ -103,18 +103,23 @@ public class mainActivity extends FragmentActivity {
             }
         });
     }
+
+    //The following 2 Methods are crucial to runiing the app.. they determine what kind of data will be downloaded from the online database.
     private void loadData() {
+        //This is where we make all code customisations for us to pull out specific data sets for each recycler view list.
         query = firestore.collection("Posts").limit(30);
     }
+
     private void setUpAdapter ()
     {
         final FirestoreRecyclerOptions<PostItem> options = new FirestoreRecyclerOptions
                .Builder<PostItem>().setQuery(query,PostItem.class).build();
+        final String profile_photo = "abe";
                firebaseAdapter = new FirestoreRecyclerAdapter<PostItem, SCHBarViewHolder>(options) {
                    @Override
                    protected void onBindViewHolder(@NonNull final SCHBarViewHolder holder, final int position, @NonNull final PostItem model) {
                         Log.d(TAG, "onBindViewHolder: called");
-                        holder.setView(model.getUser(), model.getImageUri(), model.getTitle(), model.getDescription(), model.getDisplay_photo());
+                        holder.setView(model.getUser(), model.getImageUri(), model.getTitle(), model.getDescription(), profile_photo);
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -135,6 +140,5 @@ public class mainActivity extends FragmentActivity {
                };
                mainList.setAdapter(firebaseAdapter);
     }
-
 }
 

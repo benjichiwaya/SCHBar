@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.squareup.picasso.Picasso;
 
 public class SCHBarViewHolder extends RecyclerView.ViewHolder {
@@ -23,7 +22,6 @@ public class SCHBarViewHolder extends RecyclerView.ViewHolder {
     ImageView Image;
     ImageView Display_photo;
     TextView User;
-
 
     public SCHBarViewHolder(View itemView)
     {

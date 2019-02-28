@@ -26,8 +26,9 @@ public class Registration extends AppCompatActivity {
     private String pass;
     private String userName;
     private String passConf;
-    private static final String TAG = Registration.class.getName();
+    private String d_p_url;
 
+    private static final String TAG = Registration.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,23 +43,25 @@ public class Registration extends AppCompatActivity {
     }
 
     public void Final_Register(View view) {
-
         login = email.getText().toString();
         pass = password.getText().toString();
         userName = username.getText().toString();
         passConf = passwordConfirm.getText().toString();
-
+        d_p_url = " ";
         final Map <String,Object> User = new HashMap<>();
 
         if (!(login.isEmpty() || pass.isEmpty() || userName.isEmpty() || passConf.isEmpty())) {
             firebaseAuth.createUserWithEmailAndPassword(login, pass)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        //Check if d_p_ur is empty
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
+
                                 User.put("User", userName);
                                 User.put("Email",login);
+                                User.put("Profile_Picture", d_p_url);
                                 firestore.collection("Users").add(User).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
@@ -80,4 +83,8 @@ public class Registration extends AppCompatActivity {
 
     }
 
+    public void register_image(View view) {
+
+        //Work on code to select image for profile picture
+    }
 }

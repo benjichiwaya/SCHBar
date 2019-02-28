@@ -21,6 +21,9 @@
     <!--*********************************P.O.S.T************************************-->
     <string name="feed_post_title">Short title to the post</string>
     <string name="feed_post_content">This is the very first post. Awesome! </string>
+    <string name="lit">!Lit!</string>
+    <string name="academic">Academic</string>
+    <string name="atheltic">Athletic</string>
 
     <string name="large_text">
         "Material is the metaphor.\n\n"
