@@ -55,7 +55,6 @@ public class Post extends AppCompatActivity {
     private String User_profile;
     private String User_picture;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,10 +73,8 @@ public class Post extends AppCompatActivity {
                     {
                        User_profile = document.getData().get("User").toString();
                        User_picture = document.getData().get("Profile_Picture").toString();
-
                     }
                 }
-
             }
         });
     }
@@ -160,7 +157,6 @@ public class Post extends AppCompatActivity {
      * This is the segment of code where I programmed how the imageUri and accompanying data is stored online and on the local database.
      * */
     public void createNew_Posting(View view) {
-
         //creat a safe check for cases where there is no imageUri attached
         final String caption = captionPost.getText().toString().trim();
         final String notes = captioNotes.getText().toString();
@@ -209,7 +205,6 @@ public class Post extends AppCompatActivity {
                 });
         }
     }
-
 
     // #Include new parameter XX that's going to determine which collection of posts you will be saving  the current new_data
     private void write_New_Data(String user, String uri, String title, String description, String user_picture , String channel){
