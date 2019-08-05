@@ -33,12 +33,9 @@ public class Login extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private EditText email, password;
-    private TextView textView;
-    private ImageView imageView;
     private CheckBox checkBox;
     private String pass,login;
     private SharedPreferences sharedPreferences;
-    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +44,6 @@ public class Login extends AppCompatActivity {
 
         email = findViewById(R.id.user_login);
         password = findViewById(R.id.user_passcode);
-        textView = findViewById(R.id.text_register);
-        imageView = findViewById(R.id.imageView);
-        checkBox = findViewById(R.id.checkBox);
-        button = findViewById(R.id.login_button);
-
         firebaseAuth = FirebaseAuth.getInstance();
 
         sharedPreferences = this.getSharedPreferences("Login_Data", Context.MODE_PRIVATE);
@@ -78,6 +70,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void register_Account(View view) {
+
         startActivity(new Intent(Login.this ,Registration.class));
     }
 
@@ -97,15 +90,12 @@ public class Login extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
-
                                 FirebaseUser user = firebaseAuth.getCurrentUser();
-
                                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                         if(isChecked)
                                         {
-
                                             SharedPreferences.Editor editor = sharedPreferences.edit();
                                             editor.putString("User",login);
                                             editor.putString("Passcode",pass);
@@ -114,9 +104,7 @@ public class Login extends AppCompatActivity {
                                         }
                                     }
                                 });
-
                                 startActivity(new Intent(Login.this, mainActivity.class));
-
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(Login.this, R.string.auth_failed,
